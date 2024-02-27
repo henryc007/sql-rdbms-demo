@@ -1,0 +1,113 @@
+{% extends "head-template.j2" %}
+{% block title %}Store Purchases{% endblock %}
+
+{% block content %}
+
+<body onload="browseStorePurchases()">
+
+  <!-- Browse -->
+  <div id="browse" style="display: block">
+  <p><strong>Browse Store Purchases</strong></p>
+  <table>
+    {% if data %}
+    <thead>
+      <tr>
+        {% for key in data[0].keys() %}
+        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+        {% endfor %} 
+      </tr>
+    <tbody>
+      {% for item in data %}
+        <tr>
+          {% for key in item.keys() %}
+          <td> {{item[key]}} </td> 
+          {% endfor %}
+        </tr> 
+      {% endfor %} 
+    {% endif %} 
+  </table>  
+  <input type="button" value="New Store Purchase" onclick="newStorePurchase()">
+  </div>
+
+  <!-- Insert Store Purchase-->
+  <div id="insert-store" style="display: block">
+      <form id="add-form">
+          <legend><strong>Add Seller's Information</strong></legend>
+          <fieldset>
+            <label>Customer:</label>
+            <select id="customerNameId" name="customerName" required> 
+              <option value=""> Select a customer </option>
+              {% for customer in customers %}
+                <option value="{{ customer['id'] }}">{{customer['first_name']}} {{customer['last_name']}}</option> 
+              {% endfor %} 
+            </select>
+            <label> Purchase Date: </label> <input type="date" id="purchaseDateId" name="purchaseDate" required>
+          </fieldset>
+            <input type="button" value="Continue to Item Purchased" onclick="continueStorePurchase()">
+            <input type="button" value="Cancel" onclick="browseStorePurchases()">
+      </form>
+  </div>
+
+  <!-- Insert Item Purchase-->
+  <div id="insert-item" style="display: block">
+    <form method="POST">
+        <legend><strong>Add Store Purchased Item</strong></legend>
+        <fieldset>
+          <input type="hidden" class="form-control" id="customerName" name="customerName" required>
+          <input type="hidden" class="form-control" id="purchaseDate" name="purchaseDate" required>
+          <label >Album:</label>
+          <select id="albumName" name="albumName" required> 
+            <option>Select album</option>
+            {% for album in albums %}
+              <option value="{{ album['id'] }}"> {{ album['album_name']}} - {{album['artist_name']}}</option>
+            {% endfor %} 
+          </select>
+          <label > Condition: </label required>
+          <select id="condition" name="condition" placeholder=""> 
+            <option value="">Select condition</option>
+            {% for condition in conditions %}
+              <option value="{{ condition['id'] }}" > {{ condition['description']}}</option>
+            {% endfor %} 
+          </select>
+          <label>Quantity:</label> <input type="number" min="1" name="quantity" required>
+          <label> Purchase Price:</label> <input type="text" name="price" required>
+        </fieldset>
+        <input type="submit" id="complete-submit" value="Complete Store Purchase" onclick="browseStorePurchases()">
+        <input type="button" value="Cancel" onclick="newStorePurchase()">   
+    </form>
+  </div>
+
+  <script language="JavaScript">
+    function showform(dowhat) {
+      if (dowhat == 'insert-store'){
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert-store').style.display = 'block';
+        document.getElementById('insert-item').style.display = 'none';
+      }
+      else if (dowhat =='insert-item') {
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert-store').style.display = 'none';
+        document.getElementById('insert-item').style.display = 'block';
+      }
+      else {
+        document.getElementById('browse').style.display = 'block';
+        document.getElementById('insert-store').style.display = 'none';
+        document.getElementById('insert-item').style.display = 'none';
+      }
+    }
+      function newStorePurchase() { showform('insert-store'); }
+      function continueStorePurchase() { 
+        var customerName = document.getElementById('customerNameId').value;
+        var purchaseDate = document.getElementById('purchaseDateId').value;
+
+        document.getElementById('customerName').value = customerName;
+        document.getElementById('purchaseDate').value = purchaseDate;
+        
+        showform('insert-item'); }
+
+      function browseStorePurchases() { showform ('browse'); }
+  </script>
+</body>
+{% endblock %}
+
+

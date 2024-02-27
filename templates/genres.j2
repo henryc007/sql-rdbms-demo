@@ -1,0 +1,61 @@
+{% extends "head-template.j2" %}
+{% block title %}Genres{% endblock %}
+
+{% block content %}
+
+<body onload="browseGenres()">
+
+  <!-- Browse -->
+  <div id="browse" style="display: block">
+  <p><strong>Browse Genres</strong></p>
+  <table>
+    {% if data %}
+    <thead>
+      <tr>
+        {% for key in data[0].keys() %}
+        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+        {% endfor %} 
+      </tr>
+    <tbody>
+      {% for item in data %}
+        <tr>
+          {% for key in item.keys() %}
+          <td> {{item[key]}} </td> 
+          {% endfor %}
+        </tr> 
+      {% endfor %} 
+    {% endif %} 
+  </table>   
+
+  <input type="button" value="New Genre" onclick="newGenre()">
+  </div>
+
+  <!-- Insert -->
+  <div id="insert" style="display: block">
+      <form method="POST">
+          <legend><strong>Add Genre</strong></legend>
+            <fieldset >
+              <label> Genre: </label> <input type="text" name="genre" id="genre" required>
+            </fieldset>
+            <input type="submit" id="newGenre" value="Add Genre">
+            <input type="button" value="Cancel" onclick="browseGenres()">
+      </form>
+  </div>
+  <script language="JavaScript">
+    function showform(dowhat) {
+      if (dowhat == 'insert'){
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert').style.display = 'block';
+      }
+      else {
+        document.getElementById('browse').style.display = 'block';
+        document.getElementById('insert').style.display = 'none';
+      }
+    }
+      function newGenre() { showform('insert'); }
+      function browseGenres() { showform ('browse'); }
+  </script>
+</body>
+{% endblock %}
+
+

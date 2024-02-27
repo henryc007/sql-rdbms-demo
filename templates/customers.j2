@@ -1,0 +1,67 @@
+{% extends "head-template.j2" %}
+{% block title %}Customers{% endblock %}
+
+{% block content %}
+<body onload="browseCustomer()">
+
+  <!-- Browse -->
+  <div id="browse" style="display: block">
+  <p><strong>Browse Customers</strong></p>
+  <table>
+    {% if data %}
+    <thead>
+      <tr>
+        {% for key in data[0].keys() %}
+        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+        {% endfor %}
+      </tr>
+    <tbody>
+      {% for item in data %}
+        <tr>
+          {% for key in item.keys() %}
+          <td> {{item[key]}} </td> 
+          {% endfor %}
+        </tr> 
+      {% endfor %} 
+    {% endif %} 
+  </table>   
+  <input type="button" value="New Customer" onclick="newCustomer()">
+  </div>
+
+  <!-- Insert -->
+  <div id="insert">
+      <form method="POST">
+          <legend><strong>Add Customer</strong></legend>
+            <fieldset>
+              <label>First Name:</label> <input type="text" name="firstName" required>
+              <label>Last Name:</label> <input type="text" name="lastName" required>
+              <label>Phone Number:</label> <input type="tel" name="phoneNumber" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" title="Ex: 999-999-9999" required>
+              <label>Email:</label> <input type="email" name="email">
+              <label>Zip Code:</label> <input type="text" pattern="[0-9]{5}" name="zipCode" required>
+              <label>Ranch Member:</label> <input type="checkbox" name="ranchMember" value="true">
+            </fieldset>
+            <input type="submit" value="Add Customer">
+            <input type="button" value="Cancel" onclick="browseCustomer()">
+      </form>
+  </div>
+
+  <script language="JavaScript">
+    function showform(dowhat) {
+      if (dowhat == 'insert'){
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert').style.display = 'block';
+      }
+      else {
+        document.getElementById('browse').style.display = 'block';
+        document.getElementById('insert').style.display = 'none';
+        document.getElementById('update').style.display = 'none';
+        document.getElementById('delete').style.display = 'none';
+      }
+    }
+    function newCustomer() { showform('insert'); }
+    function browseCustomer() { showform ('browse'); }
+  </script>
+</body>
+{% endblock %}
+
+

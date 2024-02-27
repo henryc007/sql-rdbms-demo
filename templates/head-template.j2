@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %} - Record Ranch</title>
+        <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital,wght@1,700&family=Pacifico&family=Roboto:wght@300&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+        <h1>The Record Ranch <img src="{{ url_for('static', filename='record2.png') }}" alt="Record" width="50" height="50"></h1>
+        <br>
+        <div id="db-links">
+            [<a href="/customers">Customers</a> | <a href="/vinyls">Vinyls</a>
+            | <a href="/albums">Albums</a> | <a href="/artists">Artists</a> | <a href="/genres">Genres</a>
+            | <a href="/conditions">Conditions</a> | <a href="/customer-purchases">Customer Purchases</a>
+            | <a href="/store-purchases">Store Purchases</a>]
+        </div>
+    </head>
+
+    {% block content %}{% endblock %}
+
+</html>

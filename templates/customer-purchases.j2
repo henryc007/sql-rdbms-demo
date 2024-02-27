@@ -1,0 +1,156 @@
+{% extends "head-template.j2" %}
+{% block title %}Customer Purchases{% endblock %}
+
+{% block content %}
+
+<body onload="browseCustomerPurchases()">
+
+  <!-- Browse -->
+  <div id="browse" style="display: block">
+  <p><strong>Browse Customer Purchases</strong></p>
+  <table>
+    {% if data %}
+    <thead>
+      <tr>
+        {% for key in data[0].keys() %}
+        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+        {% endfor %} 
+      </tr>
+    <tbody>
+      {% for item in data %}
+        <tr>
+          {% for key in item.keys() %}
+          <td> {{item[key]}} </td> 
+          {% endfor %}
+        </tr> 
+      {% endfor %} 
+    {% endif %} 
+  </table>   
+
+  <input type="button" value="New Customer Purchase" onclick="newCustomerPurchase()">
+  </div>
+
+  <!-- Insert Customer Purchase-->
+  <div id="insert-customer" style="display: block">
+      <form method="POST">
+          <legend><strong>Add Customer's Information</strong></legend>
+            <fieldset>
+              <label>Customer:</label>
+              <select id="customerNameId" name="customerName" required> 
+                <option value=""> Select a customer </option>
+                {% for customer in customers %}
+                  <option value="{{ customer['id'] }}">{{customer['first_name']}} {{customer['last_name']}}</option> 
+                {% endfor %} 
+              </select>
+              <label> Purchase Date: </label> <input type="date" id="purchaseDateId" name="purchaseDate" pattern="\d{2}/\d{2}/(201[1-9]|20[2-3]\d)" required>
+            </fieldset>
+            <input type="button" value="Continue to Item Purchased" onclick="continueCustomerPurchase()">
+            <input type="button" value="Cancel" onclick="browseCustomerPurchases()">
+      </form>
+  </div>
+
+  <!-- Insert Item Purchase-->
+  <div id="insert-item" style="display: block">
+    <form id="insert-item-form" method="POST" action="/customer-purchases">
+        <legend><strong>Add Customer Purchased Item</strong></legend>
+          <fieldset>
+            <input type="hidden" class="form-control" id="customerName" name="customerName" required>
+            <input type="hidden" class="form-control" id="purchaseDate" name="purchaseDate" required>
+            <label >Album:</label>
+            <select id="albumName" name="albumName" onchange="fetchConditions(this.value, this.options[this.selectedIndex].getAttribute('data-artist-id'))" required> 
+              <option>Select album</option>
+              {% for album in albums %}
+                <option value="{{ album['id'] }}" data-artist-id="{{ album['artist_id'] }}"> {{ album['album_name']}} - {{album['artist_name']}}</option>
+              {% endfor %} 
+            </select>
+            <label > Condition: </label>
+            <select id="condition" name="condition" placeholder="" onchange="updateMaxQuantity()"> 
+              <option value="">Select condition</option>
+              {% for condition in conditions %}
+                  <option value="{{ condition['id'] }}" data-condition-id="{{ condition['id'] }}"> {{ condition['description']}}</option>
+
+              {% endfor %} 
+            </select>
+            <label>Quantity:</label> <input type="number" min="1" name="quantity" id="quantity" value="1" required>
+          </fieldset>
+          <input type="submit" name="button" id="complete-submit" value="Complete Customer Purchase">
+          <input type="button" value="Cancel" onclick="newCustomerPurchase()">
+    </form>
+  </div>
+
+  <script language="JavaScript">
+    function showform(dowhat) {
+      if (dowhat == 'insert-customer'){
+          document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert-customer').style.display = 'block';
+        document.getElementById('insert-item').style.display = 'none';
+      }
+      else if (dowhat =='insert-item') {
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert-customer').style.display = 'none';
+        document.getElementById('insert-item').style.display = 'block';
+      }
+      else {
+        document.getElementById('browse').style.display = 'block';
+        document.getElementById('insert-customer').style.display = 'none';
+        document.getElementById('insert-item').style.display = 'none';
+      }
+    }
+    function newCustomerPurchase() { showform('insert-customer'); }
+    function continueCustomerPurchase() { 
+      var customerName = document.getElementById('customerNameId').value;
+      var purchaseDate = document.getElementById('purchaseDateId').value;
+
+      document.getElementById('customerName').value = customerName;
+      document.getElementById('purchaseDate').value = purchaseDate;
+      
+      showform('insert-item'); }
+
+    function browseCustomerPurchases() { showform ('browse'); }
+
+    function populateConditions(conditions) {
+      var conditionSelect = document.getElementById('condition');
+      conditionSelect.innerHTML = ''; 
+      
+      var defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Select condition';
+      conditionSelect.appendChild(defaultOption);
+
+      conditions.forEach(function (condition) {
+        var option = document.createElement('option');
+        option.value = condition.id;
+        option.textContent = condition.description;
+        conditionSelect.appendChild(option);
+      });
+    }
+
+    function fetchConditions(albumId, artistId) {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/conditions/' + artistId, true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var conditions = JSON.parse(xhr.responseText);
+          populateConditions(conditions);
+        }
+      };
+      xhr.send();
+    }
+
+    function updateMaxQuantity() {
+      var albumId = document.getElementById('albumName').value;
+      var conditionId = document.getElementById('condition').value;
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/get_max_quantity?album_id=' + albumId + '&condition_id=' + conditionId, true);
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var maxQuantity = parseInt(xhr.responseText);
+          document.getElementById('quantity').max = maxQuantity;
+        }
+      };
+      xhr.send();
+    }
+  </script>
+</body>
+{% endblock %}
+

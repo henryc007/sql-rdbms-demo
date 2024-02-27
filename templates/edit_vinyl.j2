@@ -1,0 +1,53 @@
+{% extends "head-template.j2" %}
+{% block title %}Update Vinyl{% endblock %}
+
+{% block content %}
+
+<body onload="updateVinyl()">
+  <div id="update">
+    <form action="/edit_vinyl/{{data[0].id}}" method="POST">
+        <legend><strong>Update Vinyl</strong></legend>
+            <fieldset class="fields">
+              <!-- <label> {{data.album_name}}</label> -->
+              <input type="hidden" value="{{data.id}}" class="form-control" id="vinylID" name="vinylID" required>
+              <!-- <label> Album</label> <input type="text" value="{{data[0].album_name}}" name="albumName" id="updateAlbum"> -->
+              <!-- <label> Artist</label> <input type="text" value="{{data[0].artist_name}}" name="albumArtist" id="updateArtist"> -->
+              <label> Album </label>
+              <select id="albumName" name="albumName"> 
+                {% for album in albums %}
+                  {% if album['album_name'] == data[0].album_name %}
+                    <option value="{{ album['id'] }}" selected> {{ album['album_name']}} - {{album['artist_name']}}</option>
+                  {% else %}
+                    <option value="{{ album['id'] }}"> {{album['album_name']}} - {{album['artist_name']}}</option> 
+                  {% endif %}
+                {% endfor %} 
+              </select>
+              
+              <label> Condition </label>
+              <select id="condition" name="condition" placeholder=""> 
+                {% for condition in conditions %}
+                  {% if condition['description'] == data[0].description %}
+                    <option value="{{ condition['id'] }}" selected> {{ condition['description']}}</option>
+                  {% else %}
+                    <option value="{{ condition['id'] }}"> {{condition['description']}}</option> 
+                  {% endif %}
+                {% endfor %} 
+              </select>
+              <label> Price</label> <input type="text" value="{{data[0].retail_price}}" name="price" id="updatePrice">
+              <label> Quantity</label> <input type="text" value="{{data[0].qty_in_stock}}" name="quantity" id="updateQuantity">
+      </fieldset>
+      <input type="submit" id="editVinyl" value="Save Update" name="edit_vinyl">
+      <a href='/vinyls'><input type="button" value="Cancel"></a>
+    </form>
+  </div>
+  <script language="JavaScript">
+    function showform(dowhat){
+      if (dowhat == 'update') {
+      document.getElementById('update').style.display = 'block';
+      }
+    };
+    function updateVinyl() { showform('update')};
+  </script>
+</body>
+{% endblock %}
+

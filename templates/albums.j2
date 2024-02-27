@@ -1,0 +1,74 @@
+{% extends "head-template.j2" %}
+{% block title %}Albums{% endblock %}
+{% block content %}
+
+<body onload="browseAlbums()">
+
+    <!--Browse-->
+    <div id="browse" style="display: block">
+    <p><strong>Browse Albums</strong></p>
+    <table >
+    {% if data %}
+    <thead>
+        <tr>
+        {% for key in data[0].keys() %}
+        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+        {% endfor %} 
+        </tr>
+    <tbody>
+        {% for item in data %}
+        <tr>
+            {% for key in item.keys() %}
+            <td> {{item[key]}} </td> 
+            {% endfor %}
+        </tr> 
+        {% endfor %} 
+    {% endif %} 
+    </table>  
+    <input type="button" value="New Album" onclick="newAlbum()">
+    </div>
+
+    <!--Insert-->
+    <div id="insert" style="display: block">
+        <form method="POST">
+            <legend><strong>Add Album</strong></legend>
+            <fieldset class="fields">
+                <label> Album: </label> <input type="text" name="albumName" required>
+                <label> Artist: </label>
+                <select id="artistName" name="artistName" required> 
+                    <option value=""> Select artist </option>
+                    {% for artist in artists %}
+                      <option value="{{ artist['id'] }}"> {{artist['artist_name']}} </option> 
+                    {% endfor %} 
+                </select>
+                <label> Genre: </label>
+                <select id="genre" name="genre" required> 
+                    <option value=""> Select genre </option>
+                    {% for genre in genres %}
+                      <option value="{{ genre['id'] }}"> {{genre['description']}} </option> 
+                    {% endfor %} 
+                </select>
+                <label> Year: </label> 
+                <input type="number" name="albumYear" min="1900" max="2023" pattern="[0-9]{4}" required>
+            </fieldset>
+            <input type="submit" value="Add Album">
+            <input type="button" value="Cancel" onclick="browseAlbums()">
+        </form>
+    </div>
+    <script language="JavaScript">
+      function showform(dowhat) {
+        if (dowhat == 'insert'){
+          document.getElementById('browse').style.display = 'none';
+          document.getElementById('insert').style.display = 'block';
+        }
+        else {
+          document.getElementById('browse').style.display = 'block';
+          document.getElementById('insert').style.display = 'none';
+        }
+      }
+        function newAlbum() { showform('insert'); }
+        function browseAlbums() { showform ('browse'); }
+
+    </script>
+</body>
+{% endblock %}

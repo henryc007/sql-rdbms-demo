@@ -1,0 +1,94 @@
+{% extends "head-template.j2" %}
+{% block title %}Vinyls{% endblock %}
+
+{% block content %}
+
+<body onload="browseVinyl()">
+
+  <!-- Browse -->
+  <div id="browse" style="display: block">
+  <p><strong>Browse Vinyls</strong></p>
+  <table id="vinylTable">
+    
+    {% if data %}
+    <thead>
+      <tr>
+        {% for key in data[0].keys() %}
+        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+        {% endfor %} 
+        <th></th>
+        <th></th>
+      </tr>
+    <tbody>
+      {% for item in data %}
+        <tr>
+          {% for key in item.keys() %}
+          <td> {{item[key]}} </td> 
+          {% endfor %}
+          <td><a href="edit_vinyl/{{item.ID}}" id="iconOp"><span class="material-symbols-outlined">
+            edit
+            </span></a>
+          </td>
+          <td><a href="delete_vinyl/{{item.ID}}" id="iconOp" ><span class="material-symbols-outlined">
+            delete
+            </span></a>
+          </td>
+        </tr> 
+      {% endfor %} 
+    {% endif %} 
+  </table>   
+ 
+  <input type="button" value="New Vinyl" onclick="newVinyl()">
+  </div>
+
+  <!-- Insert -->
+  <div id="insert" style="display: block">
+      <form action="/vinyls" method="POST">
+          <legend><strong>Add Vinyl</strong></legend>
+          <fieldset>
+            <label> Album:</label> 
+            <select id="albumName" name="albumName" required> 
+              <option value=""> Select album </option>
+              {% for album in albums %}
+                <option value="{{ album['id'] }}"> {{album['album_name']}} - {{album['artist_name']}}</option> 
+              {% endfor %} 
+            </select>
+            <label> Condition: </label>
+            <select id="condition" name="condition" placeholder="" required> 
+              <option value=""> Select condition</option>
+              {% for condition in conditions %}
+                <option value="{{ condition['id'] }}"> {{condition['description']}}</option> 
+              {% endfor %} 
+            </select>
+            <label> Price:</label> <input type="text" id="price" name="price" required>
+            <label> Quantity:</label> <input type="number" id="quantity" name="quantity" min="1" required>
+          </fieldset>
+          <input type="submit" id="addVinyl" name="add_vinyl" value="Add Vinyl">
+          <input type="button" value="Cancel" onclick="browseVinyl()">
+      </form>
+  </div>
+
+  <script language="JavaScript">
+    function showform(dowhat) {
+      if (dowhat == 'insert'){
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert').style.display = 'block';
+      }
+      else if (dowhat == 'update'){
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert').style.display = 'none';
+      }
+      else {
+        document.getElementById('browse').style.display = 'block';
+        document.getElementById('insert').style.display = 'none';
+      }
+    }
+
+    function newVinyl() { showform('insert'); }
+    function browseVinyl() { showform ('browse'); }
+
+  </script>
+</body>
+{% endblock %}
+
+

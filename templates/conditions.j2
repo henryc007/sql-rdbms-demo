@@ -1,0 +1,59 @@
+{% extends "head-template.j2" %}
+{% block title %}Conditions{% endblock %}
+
+{% block content %}
+
+<body onload="browseConditions()">
+
+  <!--Browse-->
+  <div id="browse" style="display: block">
+  <p><strong>Browse Conditions</strong></p>
+  <table>
+    {% if data %}
+    <thead>
+      <tr>
+        {% for key in data[0].keys() %}
+        <th scope="col" data-field="{{ key }}" data-filter-control="input">{{ key }}</th>
+        {% endfor %}
+      </tr>
+    <tbody>
+      {% for item in data %}
+        <tr>
+          {% for key in item.keys() %}
+          <td> {{item[key]}} </td> 
+          {% endfor %}
+        </tr> 
+      {% endfor %} 
+    {% endif %} 
+  </table> 
+  <input type="button" value="New Condition" onclick="newCondition()">
+  </div>
+
+  <!--Insert-->
+  <div id="insert" style="display: block">
+      <form method="POST">
+          <legend><strong>Add Condition</strong></legend>
+            <fieldset>
+              <label> Condition: </label> <input type="text" name="condition" id="condition" required>
+            </fieldset>
+            <input type="submit" id="newCondition" value="Add Condition">
+            <input type="button" value="Cancel" onclick="browseConditions()">
+      </form>
+  </div>
+  <script language="JavaScript">
+    function showform(dowhat) {
+      if (dowhat == 'insert'){
+        document.getElementById('browse').style.display = 'none';
+        document.getElementById('insert').style.display = 'block';
+      }
+      else {
+        document.getElementById('browse').style.display = 'block';
+        document.getElementById('insert').style.display = 'none';
+      }
+    }
+      function newCondition() { showform('insert'); }
+      function browseConditions() { showform ('browse'); }
+  </script>
+</body>
+{% endblock %}
+

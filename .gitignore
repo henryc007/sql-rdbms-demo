@@ -7,3 +7,4 @@ venv
 #Python Cache
 __pycache__
 
+.DS_Store

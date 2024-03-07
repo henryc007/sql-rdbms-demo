@@ -1,6 +1,6 @@
 # sql-rdbms-demo
 
-This repository contains a web application that replicates a record store's inventory and sales tracking system. It utilizes a relational database management system (RDBMS) to store data, SQL for database queries, Flask for the backend server, and Jinja for the frontend templating.
+This repository contains a web application that replicates a record store's inventory and sales tracking system. It utilizes a relational database to store data, SQL for database queries, Flask for the backend server, and Jinja for the frontend.
 
 ## Features
 
@@ -22,4 +22,4 @@ This repository contains a web application that replicates a record store's inve
 
 ## Contributors
 
-- Jordan Howell(https://github.com/jordanhowell96) 
+- Jordan Howell (https://github.com/jordanhowell96) 

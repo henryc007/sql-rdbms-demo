@@ -12,11 +12,11 @@ load_dotenv()
 
 
 
-app.config["MYSQL_HOST"] = os.getenv('host')
-app.config["MYSQL_USER"] = os.getenv('user')
-app.config["MYSQL_PASSWORD"] = os.getenv('sauce')
-app.config["MYSQL_DB"] = os.getenv('mysql_db')
-app.config["MYSQL_CURSORCLASS"] = os.getenv('cursor_class')
+# app.config["MYSQL_HOST"] = os.getenv('host')
+# app.config["MYSQL_USER"] = os.getenv('user')
+# app.config["MYSQL_PASSWORD"] = os.getenv('sauce')
+# app.config["MYSQL_DB"] = os.getenv('mysql_db')
+# app.config["MYSQL_CURSORCLASS"] = os.getenv('cursor_class')
 mysql = MySQL(app)
 
 
